@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
@@ -24,7 +24,7 @@ def blogs(request):
 @login_required
 def blog(request, blog_id):
 	"""Show a single blog and all its posts"""
-	blog = Blog.objects.get(id=blog_id)
+	blog = get_object_or_404(Blog, id=blog_id)
 	check_blog_owner(blog.owner, request.user)
 
 	posts = blog.post_set.order_by('-date_added')
@@ -52,7 +52,7 @@ def new_blog(request):
 @login_required
 def new_post(request, blog_id):
 	"""Add a new post to a blog"""
-	blog = Blog.objects.get(id=blog_id)
+	blog = get_object_or_404(Blog, id=blog_id)
 
 	if request.method != 'POST':
 		# No data is submitted; create a blank form
@@ -73,7 +73,7 @@ def new_post(request, blog_id):
 @login_required
 def edit_post(request, post_id):
 	"""Edit an existing post"""
-	post = Post.objects.get(id=post_id)
+	post = get_object_or_404(Blog, id=post_id)
 	blog = post.blog
 	check_blog_owner(blog.owner, request.user)
 
