@@ -60,7 +60,7 @@ def new_post(request, blog_id):
 	else:
 		# POST data submitted; process data
 		form = PostForm(data=request.POST)
-		if form.is_valid() and check_blog_owner(blog.owner, request.user)!=Http404:
+		if form.is_valid():
 			new_post = form.save(commit=False)
 			new_post.blog = blog
 			new_post.save()
@@ -73,7 +73,7 @@ def new_post(request, blog_id):
 @login_required
 def edit_post(request, post_id):
 	"""Edit an existing post"""
-	post = get_object_or_404(Blog, id=post_id)
+	post = get_object_or_404(Post, id=post_id)
 	blog = post.blog
 	check_blog_owner(blog.owner, request.user)
 
