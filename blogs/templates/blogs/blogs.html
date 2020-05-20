@@ -1,7 +1,7 @@
 {% extends "blogs/base.html" %}
 
 {% block page_header %}
-	<h1>Blogs</h1>
+	<h1>Channels</h1>
 {% endblock page_header %}
 
 {% block content %}
@@ -17,9 +17,9 @@
 				</h3></li>
 			{% endif %}
 		{% empty %}
-			<li><h3>No blogs have been added yet.</h3></li>
+			<li><h3>No channels have been added yet.</h3></li>
 		{% endfor %}
 	</ul>
 
-	<h3><a href="{% url 'blogs:new_blog' %}">Add a new blog</a></h3>
+	<h3><a href="{% url 'blogs:new_blog' %}">Add a new channel</a></h3>
 {% endblock content %}
