@@ -17,7 +17,7 @@ def index(request):
 @login_required
 def blogs(request):
 	"""Show all blogs"""
-	blogs = Blog.objects.filter(owner=request.user).order_by('date_added')
+	blogs = Blog.objects.order_by('date_added')
 	context = {'blogs':blogs}
 	return render(request, 'blogs/blogs.html', context)
 
@@ -25,8 +25,8 @@ def blogs(request):
 def blog(request, blog_id):
 	"""Show a single blog and all its posts"""
 	blog = get_object_or_404(Blog, id=blog_id)
-	check_blog_owner(blog.owner, request.user)
-
+	if blog.public==False:
+		check_blog_owner(blog.owner, request.user)
 	posts = blog.post_set.order_by('-date_added')
 	context = {'blog':blog, 'posts':posts}
 	return render(request, 'blogs/blog.html', context)
