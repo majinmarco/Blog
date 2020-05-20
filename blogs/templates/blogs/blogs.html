@@ -2,6 +2,7 @@
 
 {% block page_header %}
 	<h1>Channels</h1>
+	<h3>If you get an error screen when you attempt to open a channel, it's because it's locked. Same for when you try to edit a post from a channel that you do not own.</h3>
 {% endblock page_header %}
 
 {% block content %}
@@ -9,11 +10,11 @@
 		{% for blog in blogs %}
 			{% if blog.public is False %}
 				<li><h3>
-					<a href="{% url 'blogs:blog' blog.id %}">{{blog}} [[LOCKED]]</a>
+					<a href="{% url 'blogs:blog' blog.id %}">{{blog}} [[LOCKED]], by {{blog.owner}}</a>
 				</h3></li>
 			{% else %}
 				<li><h3>
-					<a href="{% url 'blogs:blog' blog.id %}">{{blog}} [[PUBLIC]]</a>
+					<a href="{% url 'blogs:blog' blog.id %}">{{blog}} [[PUBLIC]], by {{blog.owner}}</a>
 				</h3></li>
 			{% endif %}
 		{% empty %}

@@ -25,15 +25,15 @@ def blogs(request):
 def blog(request, blog_id):
 	"""Show a single blog and all its posts"""
 	blog = get_object_or_404(Blog, id=blog_id)
-	if blog.public==False:
-		check_blog_owner(blog.owner, request.user)
+	if blog.public==False and check_blog_owner(blog.owner, request.user)!=Http404:
 		posts = blog.post_set.order_by('-date_added')
 		context = {'blog':blog, 'posts':posts}
 		return render(request, 'blogs/blog.html', context)
-	else:
+	elif blog.public==True:
 		posts = blog.post_set.order_by('-date_added')
 		context = {'blog':blog, 'posts':posts}
 		return render(request, 'blogs/blog.html', context)
+	return Http404
 
 @login_required
 def new_blog(request):
@@ -79,17 +79,18 @@ def edit_post(request, post_id):
 	"""Edit an existing post"""
 	post = get_object_or_404(Post, id=post_id)
 	blog = post.blog
-	check_blog_owner(blog.owner, request.user)
-
-	if request.method != 'POST' and check_blog_owner(blog.owner, request.user) != Http404:
+	if request.method != 'POST' and blog.owner==request.user:
 		# Initial request; pre-fill form with current post
 		form = PostForm(instance=post)
-	elif check_blog_owner(blog.owner, request.user)!=Http404:
+	elif blog.owner == request.user:
 		# POST data submitted; process data.
 		form = PostForm(instance = post, data=request.POST)
 		if form.is_valid():
 			form.save()
 			return redirect('blogs:blog', blog_id=blog.id)
+	elif blog.owner != request.user:
+		return Http404
 
 	context = {'post':post, 'blog':blog, 'form':form}
 	return render(request, 'blogs/edit_post.html', context)
+
