@@ -12,7 +12,7 @@
 	{% for post in posts %}
 		<div class="card mb-3">
 			<h4 class="card-header">
-				{{ entry.date_added|date:'M d, Y H:i' }}
+				{{ post.date_added|date:'M d, Y H:i' }}
 				<small><a href="{% url 'blogs:edit_post' post.id %}">edit post</a></small>
 			</h4>
 			<div class="card-body">
