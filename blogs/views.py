@@ -27,9 +27,13 @@ def blog(request, blog_id):
 	blog = get_object_or_404(Blog, id=blog_id)
 	if blog.public==False:
 		check_blog_owner(blog.owner, request.user)
-	posts = blog.post_set.order_by('-date_added')
-	context = {'blog':blog, 'posts':posts}
-	return render(request, 'blogs/blog.html', context)
+		posts = blog.post_set.order_by('-date_added')
+		context = {'blog':blog, 'posts':posts}
+		return render(request, 'blogs/blog.html', context)
+	else:
+		posts = blog.post_set.order_by('-date_added')
+		context = {'blog':blog, 'posts':posts}
+		return render(request, 'blogs/blog.html', context)
 
 @login_required
 def new_blog(request):
@@ -77,10 +81,10 @@ def edit_post(request, post_id):
 	blog = post.blog
 	check_blog_owner(blog.owner, request.user)
 
-	if request.method != 'POST':
+	if request.method != 'POST' and check_blog_owner(blog.owner, request.user) != Http404:
 		# Initial request; pre-fill form with current post
 		form = PostForm(instance=post)
-	else:
+	elif check_blog_owner(blog.owner, request.user)!=Http404:
 		# POST data submitted; process data.
 		form = PostForm(instance = post, data=request.POST)
 		if form.is_valid():
